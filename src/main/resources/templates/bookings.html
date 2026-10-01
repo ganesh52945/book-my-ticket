@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookings | BookMyTicket</title>
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap"
+	rel="stylesheet">
+
+<style>
+:root {
+	--bg-main: #0f172a;
+	--bg-card: #111827;
+	--border: #1f2937;
+	--text-main: #e5e7eb;
+	--text-muted: #9ca3af;
+	--accent: #6496ff;
+	--accent-pink: #ff4081;
+}
+
+/* ===== GLOBAL ===== */
+body {
+	font-family: "Poppins", sans-serif;
+	background: radial-gradient(circle at top, #1e293b, var(--bg-main));
+	color: var(--text-main);
+	min-height: 100vh;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+	background: rgba(17, 24, 39, .9) !important;
+	backdrop-filter: blur(14px);
+	border-bottom: 1px solid var(--border);
+	padding: .9rem 2rem;
+}
+
+.navbar-brand {
+	font-weight: 900;
+	font-size: 1.5rem;
+	background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+	color: var(--text-muted) !important;
+	font-weight: 600;
+}
+
+.nav-link:hover {
+	color: var(--accent-pink) !important
+}
+
+.btn-logout {
+	background: linear-gradient(135deg, #ff4d4d, #ff1e1e);
+	border: none;
+	color: #fff;
+	font-weight: 700;
+	border-radius: 10px;
+	padding: .45rem 1.2rem;
+}
+
+/* ===== CONTAINER ===== */
+.admin-container {
+	max-width: 1400px;
+	margin: auto;
+	padding: 50px 20px;
+}
+
+/* ===== HEADER ===== */
+.admin-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 20px;
+	margin-bottom: 35px;
+}
+
+.admin-header h1 {
+	font-weight: 900;
+	font-size: 2rem;
+}
+
+/* ===== TABLE ===== */
+.table-wrapper {
+	background: linear-gradient(180deg, #111827, #0b1220);
+	border-radius: 18px;
+	border: 1px solid var(--border);
+	overflow: hidden;
+	box-shadow: 0 30px 70px rgba(0, 0, 0, .7);
+}
+
+.table {
+	color: var(--text-main);
+	margin-bottom: 0;
+}
+
+.table thead th {
+	background: #020617;
+	color: var(--text-muted);
+	font-weight: 700;
+	text-transform: uppercase;
+	font-size: .8rem;
+	letter-spacing: .5px;
+	border-bottom: 1px solid var(--border);
+	padding: 1rem;
+}
+
+.table tbody td {
+	padding: 1rem;
+	border-color: var(--border);
+	vertical-align: middle;
+	font-weight: 500;
+}
+
+.table tbody tr {
+	transition: .3s ease;
+}
+
+.table tbody tr:hover {
+	background: rgba(100, 150, 255, .06);
+}
+
+/* ===== IMAGE ===== */
+.movie-image {
+	width: 60px;
+	height: 60px;
+	border-radius: 10px;
+	object-fit: cover;
+	border: 1px solid var(--border);
+}
+
+/* ===== GENRE TAG ===== */
+.movie-genre {
+	background: rgba(100, 150, 255, .15);
+	color: var(--accent);
+	padding: .35rem .8rem;
+	border-radius: 999px;
+	font-size: .8rem;
+	font-weight: 700;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+	text-align: center;
+	padding: 70px 30px;
+	background: linear-gradient(180deg, #111827, #0b1220);
+	border-radius: 18px;
+	border: 1px solid var(--border);
+	box-shadow: 0 30px 70px rgba(0, 0, 0, .7);
+}
+
+.empty-state h2 {
+	font-weight: 900;
+	margin-bottom: 10px;
+}
+
+.empty-state p {
+	color: var(--text-muted);
+	margin-bottom: 25px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+	.admin-header {
+		flex-direction: column;
+		align-items: flex-start
+	}
+}
+</style>
+</head>
+
+<body>
+
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-expand-lg">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">🎬 BookMyTicket</a>
+
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto align-items-center gap-2">
+					<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+					<li class="nav-item"><button class="btn-logout"
+							onclick="location.href='/logout'">Logout</button></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- MAIN -->
+	<div class="admin-container">
+
+		<div class="admin-header">
+			<h1>🎟️ My Bookings</h1>
+		</div>
+
+		<!-- TABLE -->
+		<div th:if="${!tickets.isEmpty()}">
+			<div class="table-wrapper">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>QR Code</th>
+							<th>Movie</th>
+							<th>Theater</th>
+							<th>Screen</th>
+							<th>Date & Time</th>
+							<th>Seats</th>
+							<th>Total Price</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ticket:${tickets}">
+							<td><img th:src="${ticket.qrUrl}" class="movie-image"></td>
+							<td class="fw-semibold" th:text="${ticket.movieName}"></td>
+							<td th:text="${ticket.theaterName}"></td>
+							<td th:text="${ticket.screenName}"></td>
+							<td>
+								<span th:text="${ticket.showDate}"></span><br>
+								<span class="text-muted" th:text="${ticket.showTiming}"></span>
+							</td>
+							<td>
+								<span class="movie-genre">
+									<span th:each="seat, iterStat : ${ticket.seatNumber}">
+										<span th:text="${seat}"></span><span th:if="${!iterStat.last}">, </span>
+									</span>
+								</span>
+							</td>
+							<td th:text="'₹' + (${ticket.ticketPrice} * ${ticket.ticketCount})"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- EMPTY -->
+		<div th:if="${tickets.isEmpty()}" class="empty-state">
+			<h2>🎫 No Bookings Yet</h2>
+			<p>You haven't booked any tickets. Grab some popcorn and book a movie!</p>
+			<a href="/" class="btn btn-logout" style="background: linear-gradient(135deg, var(--accent), var(--accent-pink));">Browse Movies</a>
+		</div>
+
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

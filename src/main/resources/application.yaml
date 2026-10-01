@@ -1,0 +1,36 @@
+server:
+  port: 80
+spring:
+  application:
+    name: book-my-ticket
+  datasource:
+    url: jdbc:mysql://localhost:3306/book-my-ticket?createDatabaseIfNotExist=true
+    username: root
+    password: Mines@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
+  data:
+    redis:
+      url: redis://localhost:6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gbharth71@gmail.com
+    password: jltd gkjj kwup nkdt
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+admin:
+  email: admin@gmail.com
+  password: admin
+cloudinary:
+  url: "cloudinary://137772196427958:2dpdgK-dKFoDWeRFOi_v-j0HtEA@depnamogw"
